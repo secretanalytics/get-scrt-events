@@ -12,11 +12,13 @@ Each step denotes a function to be called in the function app.
 
 1. HTTP trigger denoting block range(start-stop) to gather and node to call for latest block.
 Parameters are json
+```
 {
     "start": int to start batch gather,
     "stop": int to stop gathering,
     "node": string with connection details to node
 }
+```
 2. Node is called for events from start-stop at 
 endpoint - http://secret-2.node.enigma.co:26657/block_results?height={X}
 

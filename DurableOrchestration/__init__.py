@@ -3,7 +3,7 @@ import logging
 import azure.functions as func
 import azure.durable_functions as df
 
-def orchestrator_function(context: df.DurableOrchestrationContext):
+async def orchestrator_function(context: df.DurableOrchestrationContext):
     """
 
     Parameters
@@ -17,4 +17,13 @@ def orchestrator_function(context: df.DurableOrchestrationContext):
         Returns the final result after the chain completes
 
     """
-    pass
+    reachable = True
+    while reachable:
+        try:
+            await context.call_activity("NodeStatus")
+            await context.call_activity("NodeNetInfo")
+        except Exception as e:
+            reachable = False
+
+main = df.Orchestrator.create(orchestrator_function)
+    

@@ -1,12 +1,12 @@
 import logging
 
-from azure.durable_functions as df 
 import azure.functions as func
-from ..shared_code.MyClasses import SerializableClass
+import azure.durable_functions as df
+
+from shared_code import Node
 
 
 async def main(req: func.HttpRequest, starter: str) -> func.HttpResponse:
-    client = df.DurableOrchestrationClient(starter)
     instance_id = await client.start_new(req.route_params["functionName"], None, None)
 
     logging.info(f"Started orchestration with ID = '{instance_id}'.")

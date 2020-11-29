@@ -1,6 +1,7 @@
 import aiohttp
 import logging
 
+
 class Node:
 
     def __init__(self, remote):

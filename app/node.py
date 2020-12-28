@@ -3,6 +3,8 @@ import aiohttp
 import asyncio
 import logging
 
+import crud
+
 
 class Node(object):
 
@@ -53,7 +55,7 @@ class Node(object):
         try:
             chaintip = status['result']['sync_info']['latest_block_height']
             logging.info("Chaintip for {} is {}".format(self.remote, chaintip))
-            out = {'remote':self.remote, 'chaintip': chaintip}
+            out = {'remote':self.remote, 'chaintip': int(chaintip)}
             return out
         except Exception as e:
             logging.error("{} - Failed chaintip parse for remote {}".format(e, self.remote))
@@ -69,6 +71,16 @@ class Node(object):
             return out
         except Exception as e:
             logging.error("{} - Failed peers parse for remote {}".format(e, self.remote))
+            return 'Fail'
+
+    async def get_block_results(self, n_height) -> dict:
+        path = "/block_results?height={}".format(n_height)
+        block = await self.__get_path(path)
+        try:
+            logging.info("Parsed block {} from remote {}".format(n_height, self.remote))
+            return block
+        except Exception as e:
+            logging.error("{} - Failed block {} parse for remote {}".format(e, n_height, self.remote))
             return 'Fail'
 
     async def __get_path(self, path):
@@ -107,11 +119,11 @@ class Node(object):
                 logging.error("{} - Failed block result parse for remote {}".format(e, self.remote))
                 return 'Fail'
 
-    async def iter_blocks(self, start, stop):
+    async def iter_blocks(self, start, stop, db_session, chain_id):
         async with aiohttp.ClientSession() as session:
-            out = []
+            #out = []
             for i in range(start, stop+1):
                 block_i = await self.__iter_get_block(session, i)
-                out.append(block_i)
+                crud.create_block(db_session, block_i, chain_id)
             logging.info("Gathered blocks {} -> {}".format(start, stop))
-            return out
+            

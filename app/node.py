@@ -71,18 +71,6 @@ class Node(object):
             logging.error("{} - Failed peers parse for remote {}".format(e, self.remote))
             return 'Fail'
 
-    async def get_block_results(self, n_height) -> dict:
-        path = "/block_results?height={}".format(n_height)
-        block = await self.__get_path(path)
-        try:
-            out = Block(block).to_dict()
-            out['remote'] = self.remote
-            logging.info("Parsed block {} from remote {}".format(n_height, self.remote))
-            return out
-        except Exception as e:
-            logging.error("{} - Failed block {} parse for remote {}".format(e, n_height, self.remote))
-            return 'Fail'
-
     async def __get_path(self, path):
         path = "http://{}:26657{}".format(self.remote, path)
         try:

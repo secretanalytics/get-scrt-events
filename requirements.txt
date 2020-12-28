@@ -1,0 +1,5 @@
+aiohttp
+alembic
+sqlalchemy
+pydantic
+psycopg2

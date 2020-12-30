@@ -1,6 +1,6 @@
 # get-scrt-events
 
-### Summary
+## Summary
 
 Application runs forever, algorithm is:
 1. Query the remote node for chaintip(most recent block)

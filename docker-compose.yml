@@ -25,11 +25,13 @@ services:
       # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
   events-api:
     image: scrt_events:latest
-    ports:
-    - "80:80"
     depends_on:
     - "postgres"
     restart: always
+    environment:
+      REMOTE_NODE: "51.140.3.67"
+      CHAIN_ID: "secret-2"
+      SQLALCHEMY_DATABASE_URL: "postgres://postgres:postgrespassword@postgres:5432/postgres"
 
 volumes:
   db_data:

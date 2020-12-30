@@ -1,5 +1,6 @@
-import base64
+import os
 import json
+import base64
 
 from sqlalchemy import create_engine
 
@@ -7,11 +8,8 @@ from sqlalchemy.orm import sessionmaker
 
 import models
 
-SQLALCHEMY_DATABASE_URL = "postgres://postgres:postgrespassword@postgres:5432/postgres"
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_engine(os.environ['SQLALCHEMY_DATABASE_URL'])
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
 
 
 def parse_block(block, chain_id):

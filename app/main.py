@@ -1,8 +1,9 @@
-from typing import List
+import os
 import json
 import time
 import asyncio
 import logging
+from typing import List
 
 from sqlalchemy.orm import Session
 
@@ -13,8 +14,8 @@ from node import Node
 models.Base.metadata.create_all(bind=engine)
 
 async def run():
-    remote_node = Node("51.140.3.67")
-    chain_id = 'secret-2'
+    remote_node = Node(os.environ['REMOTE_NODE'])
+    chain_id = os.environ['CHAIN_ID']
     db = SessionLocal()
     while True:
         db_tip = crud.get_db_tip(db, chain_id) + 1

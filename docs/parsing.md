@@ -52,6 +52,8 @@ class Event(Base):
 
 All events have an associated type denoted by the `e_type` and a list of related `attributes`. 
 
+An `attribute` is identified by an autoincremented integer `id`. 
+
 ```python
 class Attribute(Base):
     __tablename__ = 'attributes'
@@ -60,7 +62,5 @@ class Attribute(Base):
     a_value = Column('a_value', String)
     event_id = Column('event_id', Integer, ForeignKey('events.id'))
 ```
-
-An `attribute` is identified by an autoincremented integer `id`. 
 
 All attributes are associated with an `event` by the `event_id` and contain an `a_key` and `a_value`. 

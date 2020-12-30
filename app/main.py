@@ -14,6 +14,15 @@ from node import Node
 models.Base.metadata.create_all(bind=engine)
 
 async def run():
+    """
+    Application runs forever, algorithm is:
+    1. Query the remote node for chaintip(most recent block)
+    2. If the most recent block in the database(db_tip) is less than the chaintip.
+           - the remote node is queried for the block results from db_tip to chaintip
+           - these results are stored in postgresql
+       else:
+           - wait 1 second, then repeat from Step 1.
+    """
     remote_node = Node(os.environ['REMOTE_NODE'])
     chain_id = os.environ['CHAIN_ID']
     db = SessionLocal()

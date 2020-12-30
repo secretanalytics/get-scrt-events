@@ -12,6 +12,9 @@ The get-scrt-events application can be built with the following command.
 docker build . -t scrt_events:latest
 ```
 
+To customize the chain-id and remote node queried, the environment variables for the events-api application in  the docker-compose.yml can be adjusted. 
+
+The application can then be started with the following command. 
 
 ```bash
 docker-compose up -d

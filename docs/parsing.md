@@ -20,7 +20,7 @@ class Block(Base):
 
 The primary key for a block(`id`) is the `height` and `chain_id` concatenated into a string. Each block has a relation with a list of events and transactions. 
 
-A transaction object 
+A transaction object is identified by an autoincremented integer `id`. 
 
 ```python
 class Transaction(Base):
@@ -33,3 +33,5 @@ class Transaction(Base):
     block_id = Column('block_id', String, ForeignKey('blocks.id'))
     events = relationship("Event")
 ```
+
+The `gas_wanted`, `gas_used`, `success`, `block_id` and `log` are stored for all transactions. If a transaction has failed (denoted by a `success = False`), there would be no related events to decode. 

@@ -1,6 +1,6 @@
 # get-scrt-events
 
-The json returned from the Secret Node /block_results endpoint requires some parsing to be useful for analysis. This application queries a remote node for all block_results and stores the parsed data in a [postgresql](https://www.postgresql.org/) database. 
+The json returned from the Secret Node /block_results endpoint requires some parsing to be useful for analysis. This application queries a remote node for all block_results and stores the parsed data in a [postgresql](https://www.postgresql.org/) database. [Hasura](https://hasura.io/docs/) is then used to make this data queryable via [graphql](https://graphql.org/learn/). 
 
 ## Summary
 

@@ -27,7 +27,11 @@ async def run():
     chain_id = os.environ['CHAIN_ID']
     db = SessionLocal()
     while True:
-        db_tip = crud.get_db_tip(db, chain_id) + 1
+        db_tip = crud.get_db_tip(db, chain_id)
+        if db_tip:
+            db_tip +=1
+        else:
+            db_tip = 1
         chain_tip = (await remote_node.get_chaintip())['chaintip']
         if db_tip < chain_tip:
             await remote_node.iter_blocks(db_tip, chain_tip, db, chain_id)

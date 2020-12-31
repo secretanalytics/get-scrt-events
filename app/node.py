@@ -5,7 +5,6 @@ import logging
 
 import crud
 
-
 class Node(object):
 
     def __init__(self, remote: str):
@@ -95,35 +94,42 @@ class Node(object):
         except Exception as e:
             logging.error("Failed get to path {} - {}".format(path, e))
 
-    async def __iter_get_chaintip(self, session):
-        path = "http://{}:26657/status?".format(self.remote)
-        async with session.get(path, verify_ssl=False) as resp:
-            result = await resp.json()
-            try:
-                chaintip = result['result']['sync_info']['latest_block_height']
-                logging.info("Chaintip for {} is {}".format(self.remote, chaintip))
-                return int(chaintip)
-            except Exception as e:
-                logging.error("{} - Failed chaintip parse for remote {}".format(e, self.remote))
-                return 'Fail'
+    async def __iter_get(self, path, session):
+        path = "http://{}:26657{}".format(self.remote, path)
+        try:
+            logging.debug("Attempting HTTP get to path {}".format(path))
+            async with session.get(path, verify_ssl=False) as resp:
+                logging.info("Successful HTTP get to path {}".format(path))
+                result = await resp.json()
+                return result
+        except Exception as e:
+            logging.error("Failed get to path {} - {}".format(path, e))
 
     async def __iter_get_block(self, session, height):
-        path = "http://{}:26657/block_results?height={}".format(self.remote, height)
-        async with session.get(path, verify_ssl=False) as resp:
-            result = await resp.json()
-            try:
-                out = result['result']
-                logging.info("Parsed block result {} from remote {}".format(height, self.remote))
-                return out
-            except Exception as e:
-                logging.error("{} - Failed block result parse for remote {}".format(e, self.remote))
-                return 'Fail'
+        path = "/block_results?height={}".format(height)
+        result = await self.__iter_get(path, session)
+        try:
+            out = result['result']
+            logging.info("Parsed block result {} from remote {}".format(height, self.remote))
+            return out
+        except Exception as e:
+            logging.error("{} - Failed block result parse for remote {}".format(e, self.remote))
+            return 'Fail'
 
     async def iter_blocks(self, start, stop, db_session, chain_id):
         async with aiohttp.ClientSession() as session:
-            #out = []
             for i in range(start, stop+1):
-                block_i = await self.__iter_get_block(session, i)
-                crud.create_block(db_session, block_i, chain_id)
-            logging.info("Gathered blocks {} -> {}".format(start, stop))
+                try:
+                    logging.debug("Gathering block {} on chain {}".format(i, chain_id))
+                    block_i = await self.__iter_get_block(session, i)
+                except Exception as e:
+                    logging.error("{} - Failed Gathering block {} on chain {}".format(e, i, chain_id))
+                    break
+                try:
+                    logging.debug("Insert to postgres for block {} on chain {}".format(i, chain_id))
+                    crud.create_block(db_session, block_i, chain_id)
+                    logging.info(("Inserted block {} for chain {}".format(i, chain_id)))
+                except Exception as e:
+                    logging.error("{} - Failed insert to postgres for block {} on chain {}".format(e, i, chain_id))
+                    break
             

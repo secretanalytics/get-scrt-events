@@ -29,3 +29,4 @@ The application can then be started with the following command.
 docker-compose up -d
 ```
 
+To query the database from a front-end go to localhost:8080: for graphql support go to the 'Data' tab and track the tables + relationships. 

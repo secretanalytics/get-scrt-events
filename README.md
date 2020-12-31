@@ -1,7 +1,5 @@
 # get-scrt-events
 
-
-
 **Alpha release -> if you find an error come let us know in discord #analytics**
 **Has been tested with secretd-1.0.4**
 
@@ -10,9 +8,6 @@ The json returned from the Secret Node /block_results endpoint requires some par
 For a more thorough explanation of how the data is parsed, click [here](docs/parsing.md).
 
 [Hasura](https://hasura.io/docs/) is then used to make this data queryable via [graphql](https://graphql.org/learn/). 
-
-
-
 
 ## Quickstart - Docker
 

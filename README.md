@@ -1,5 +1,7 @@
 # get-scrt-events
 
+### Alpha release -> if you find an error come let us know in discord #analytics
+
 The json returned from the Secret Node /block_results endpoint requires some parsing to be useful for analysis. This application queries a remote node for all block_results and stores the parsed data in a [postgresql](https://www.postgresql.org/) database. 
 
 For a more thorough explanation of how the data is parsed, click [here](docs/parsing.md).
